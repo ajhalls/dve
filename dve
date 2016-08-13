@@ -12,7 +12,8 @@ DATA_OPTS="-map 0 -c:s copy -c:t copy -c:d copy -vn -an"
 SUFFIX="$1_new.mkv"
 SERVERS=":"
 LEN=300
-OUTDIR=`mktemp -d`
+#OUTDIR=`mktemp -d`
+OUTDIR="/home/tschoenbach/Wastelands/temp/temp2"
 VERBOSE="error"
 # override defaults in a ~/.dverc file
 if [ -f ~/.dverc ]; then
@@ -110,7 +111,7 @@ else
        $ENC -i "$1" -map 0:a -map 0:v -codec copy -f segment -segment_time $LEN -segment_format matroska -v ${VERBOSE} "${OUTDIR}/chunk-%03d.orig"
 fi
 echo "Copying file metadata"
-DATA_IN="-i data.enc -map 1:v? -map 1:a?"
+DATA_IN="-i data.enc"
 ${ENC} -y -v ${VERBOSE} -i "$1" ${DATA_OPTS} -f matroska "${OUTDIR}/data.enc" ||
   DATA_IN=""
 
@@ -130,4 +131,8 @@ for f in `ls chunk-*.enc | sort`; do
 done
 BASE=`basename "$1"`
 OUTFILE="${SUFFIX}"
-${ENC} -y -v ${VERBOSE} -f concat -i concat.txt ${DATA_IN} -map 0:s? -map 0:t? -map 0:d? -f matroska -c copy "${OUTFILE}"
+if [ -a "${OUTDIR}/data.enc" ]; then
+    ${ENC} -y -v ${VERBOSE} -f concat -i concat.txt ${DATA_IN} -map 1:v? -map 1:a? -map 0:s? -map 0:t? -map 0:d? -f matroska -c copy "${OUTFILE}"
+else
+    ${ENC} -y -v ${VERBOSE} -f concat -i concat.txt ${DATA_IN} -map 0:v? -map 0:a? -map 0:s? -map 0:t? -map 0:d? -f matroska -c copy "${OUTFILE}"
+fi
