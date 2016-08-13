@@ -12,8 +12,7 @@ DATA_OPTS="-map 0 -c:s copy -c:t copy -c:d copy -vn -an"
 SUFFIX="$1_new.mkv"
 SERVERS=":"
 LEN=300
-#OUTDIR=`mktemp -d`
-OUTDIR="/home/tschoenbach/Wastelands/temp/temp2"
+OUTDIR=`mktemp -d`
 VERBOSE="error"
 # override defaults in a ~/.dverc file
 if [ -f ~/.dverc ]; then
