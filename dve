@@ -131,7 +131,7 @@ done
 BASE=`basename "$1"`
 OUTFILE="${SUFFIX}"
 if [ -a "${OUTDIR}/data.enc" ]; then
-    ${ENC} -y -v ${VERBOSE} -f concat -i concat.txt ${DATA_IN} -map 1:v? -map 1:a? -map 0:s? -map 0:t? -map 0:d? -f matroska -c copy "${OUTFILE}"
+    ${ENC} -y -v ${VERBOSE} -f concat -i concat.txt ${DATA_IN} -map 0:v? -map 0:a? -map 1:s? -map 1:t? -map 1:d? -f matroska -c copy "${OUTFILE}"
 else
-    ${ENC} -y -v ${VERBOSE} -f concat -i concat.txt ${DATA_IN} -map 0:v? -map 0:a? -map 0:s? -map 0:t? -map 0:d? -f matroska -c copy "${OUTFILE}"
+    ${ENC} -y -v ${VERBOSE} -f concat -i concat.txt -map 0:v? -map 0:a? -map 0:s? -map 0:t? -map 0:d? -f matroska -c copy "${OUTFILE}"
 fi
