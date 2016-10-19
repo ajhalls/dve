@@ -109,9 +109,14 @@ SSH is used by GNU parallel to distribute the jobs to target systems.
 It's recommended that you use "ssh-keygen" and "ssh-copy-id" to
 setup key based authentication to all your remote hosts.
 
+The script does not prompt for passwords, as such it needs to log in automatically 
+to each server. Test this by typing ```ssh host``` such as ```ssh 192.168.1.5``` if it drops you 
+straight to a prompt, you are ready.
+  
+
 ### Pre-reqs
 
-The following need to be installed on the host running this script:
+The following need to be installed on each of the hosts running this script:
 
 - [ffmpeg](https://www.ffmpeg.org/download.html)
 - [GNU parallel](https://www.gnu.org/software/parallel/)
@@ -120,6 +125,26 @@ It's recommended that you use recent (>= 2.5.x) versions of ffmpeg to ensure
 they have all the required functionality for splitting and combining the
 video chunks.
 
+### Test Results
+On the main server running dual 2.4Ghz 6 core with 12Mb L3 cache running ffmpeg regular with the same switches as the script I get:
+```bash
+    time ffmpeg -i test.mkv  -c:v libx265 -pix_fmt yuv420p10le -preset fast -x265-params -c:a  new.mkv
+    ffmpeg version 2.8.6-1ubuntu2 Copyright (c) 2000-2016 the FFmpeg developers
+    encoded 52846 frames in 912.04s (57.94 fps), 195.18 kb/s, Avg QP:33.87
+    real    15m13.523s
+    user    94m48.804s
+    sys     1m18.776s
+```
+    
+I tried it using dve on 5 servers, all with decent processors and ram (more than 32GB per server). It never kicked off the 5th server, but it still did much better with these results:
+```bash
+    time dve -l 127.0.0.1,192.168.1.25,192.168.1.151,192.168.1.230,192.168.1.252 test.mkv
+    real    6m45.075s
+    user    0m13.552s
+    sys     0m1.288s
+```
+
+You don't get the cumulative fps like you do when you run ffmpeg directly because the job was broken into several pieces. On some of those I might see 100fps, on others 50fps, but all coming from the same source file.
 ### Windows
 
 dve can be run on Windows via [cygwin](http://www.cygwin.com/).
