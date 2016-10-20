@@ -143,6 +143,12 @@ I tried it using dve on 5 servers, all with decent processors and ram (more than
     user    0m13.552s
     sys     0m1.288s
 ```
+adding 2 more servers and I get:
+```bash
+real    5m52.790s
+user    0m12.324s
+sys     0m1.228s
+```
 
 You don't get the cumulative fps like you do when you run ffmpeg directly because the job was broken into several pieces. On some of those I might see 100fps, on others 50fps, but all coming from the same source file.
 ### Windows
